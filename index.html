@@ -5,22 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FAJR | Luxury Men's Essentials</title>
   
+  <!-- SEO & Social Open Graph Tags -->
+  <meta name="description" content="Where every man begins again. Premium fragrances, minimalist heavyweight apparel, and precision timepieces." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FAJR | Luxury Men's Essentials" />
+  <meta property="og:description" content="যে দিন শুরু হয় ফজর দিয়ে, সেই দিন হারায় না। Uncompromised craftsmanship for the modern gentleman." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=1200&q=80" />
+  <meta property="twitter:card" content="summary_large_image" />
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- টপ অ্যানাউন্সমেন্ট বার -->
+  <!-- Top Banner -->
   <div class="top-announcement">
     <span>CRAFTED FOR THE MODERN GENTLEMAN • দেশব্যাপী ক্যাশ অন ডেলিভারি</span>
   </div>
 
-  <!-- নেভিগেশন বার -->
+  <!-- Header -->
   <header class="site-header">
     <div class="header-container">
       <a href="#" class="brand-logo">FAJR</a>
@@ -31,8 +38,7 @@
         <button class="nav-btn" onclick="filterProducts('Timepieces')">Timepieces</button>
       </nav>
       <div class="header-actions">
-        <!-- কার্ট বাটন উইথ কাউন্টার -->
-        <button class="cart-trigger-btn" onclick="toggleCart(true)">
+        <button class="cart-trigger-btn" onclick="toggleCart(true)" aria-label="Open Cart">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z" />
           </svg>
@@ -42,9 +48,8 @@
     </div>
   </header>
 
-  <!-- হিরো সেকশন -->
+  <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-overlay"></div>
     <div class="hero-content">
       <span class="luxury-subtitle">SIGNATURE COLLECTION</span>
       <h1 class="hero-title">WHERE EVERY MAN<br>BEGINS AGAIN.</h1>
@@ -56,40 +61,39 @@
     </div>
   </section>
 
-  <!-- ভ্যালু প্রপোজিশন বা ট্রাস্ট বার -->
+  <!-- Trust Bar -->
   <section class="trust-bar">
     <div class="trust-item">
       <span class="trust-icon">✦</span>
       <div>
         <h4>100% Uncompromised Quality</h4>
-        <p>Premium grade ingredients & fabric</p>
+        <p>Premium grade ingredients & 240 GSM fabric</p>
       </div>
     </div>
     <div class="trust-item">
       <span class="trust-icon">✦</span>
       <div>
         <h4>Cash On Delivery</h4>
-        <p>সারাদেশে ডেলিভারি ও দ্রুত রিটার্ন পলিসি</p>
+        <p>সারা দেশে ২-৪ দিনে হোম ডেলিভারি</p>
       </div>
     </div>
     <div class="trust-item">
       <span class="trust-icon">✦</span>
       <div>
-        <h4>Signature Packaging</h4>
-        <p>Delivered in luxury matte black box</p>
+        <h4>Hassle-Free Exchange</h4>
+        <p>৭ দিনের সহজ সাইজ বা প্রোডাক্ট এক্সচেঞ্জ সুবিধা</p>
       </div>
     </div>
   </section>
 
-  <!-- প্রোডাক্ট কালেকশন গ্রিড -->
+  <!-- Products -->
   <section id="collection" class="collection-section">
     <div class="section-heading">
       <span class="badge-gold">CURATED ESSENTIALS</span>
       <h2>Signature Creations</h2>
-      <p>প্রতিটি প্রডাক্ট তৈরি করা হয়েছে আপনার ব্যক্তিত্ব ও আত্মবিশ্বাসকে আলাদা মাত্রা দিতে।</p>
+      <p>প্রতিটি প্রডাক্ট তৈরি করা হয়েছে আপনার ব্যক্তিত্ব ও আভিজাত্যকে তুলে ধরার জন্য।</p>
     </div>
 
-    <!-- ক্যাটাগরি ফিল্টার চিপস (মোবাইলের জন্য) -->
     <div class="filter-chips">
       <button class="chip active" onclick="filterProducts('all')">All</button>
       <button class="chip" onclick="filterProducts('Fragrance')">Fragrance</button>
@@ -97,13 +101,12 @@
       <button class="chip" onclick="filterProducts('Timepieces')">Timepieces</button>
     </div>
 
-    <!-- ডায়নামিক প্রোডাক্ট কার্ড লিস্ট -->
     <div id="product-grid" class="product-grid">
-      <!-- JavaScript will load cards here -->
+      <!-- Dynamic Products with Variant Selectors will render here -->
     </div>
   </section>
 
-  <!-- স্লাইড-ওভার কার্ট ড্রয়ার (Cart Drawer) -->
+  <!-- Slide-Over Cart Drawer -->
   <div class="cart-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
   <aside class="cart-drawer" id="cart-drawer">
     <div class="cart-header">
@@ -114,14 +117,11 @@
       <button class="cart-close-btn" onclick="toggleCart(false)">&times;</button>
     </div>
 
-    <!-- কার্ট আইটেম লিস্ট -->
     <div class="cart-body" id="cart-items-container">
-      <!-- Empty cart or populated items injected via JS -->
+      <!-- Cart items injected via JS -->
     </div>
 
-    <!-- কার্ট ফুটার ও এক্সপ্রেস চেকআউট ফর্ম -->
     <div class="cart-footer" id="cart-footer">
-      <!-- সামারি সেকশন -->
       <div class="cart-calculations">
         <div class="calc-row">
           <span>Subtotal</span>
@@ -143,24 +143,32 @@
         </div>
       </div>
 
-      <!-- এক্সপ্রেস চেকআউট ফর্ম -->
       <form id="express-checkout-form" onsubmit="submitOrder(event)" class="express-form">
         <span class="checkout-title">Express Cash On Delivery</span>
-        <input type="text" id="cust-name" required placeholder="আপনার পুরো নাম *" />
-        <input type="tel" id="cust-phone" required placeholder="মোবাইল নম্বর (01XXXXXXXXX) *" />
-        <textarea id="cust-address" required rows="2" placeholder="সম্পূর্ণ ডেলিভারি ঠিকানা (রোড, এলাকা, জেলা) *"></textarea>
+        <input type="text" id="cust-name" required placeholder="আপনার পুরো নাম *" autocomplete="name" />
+        <div>
+          <input type="tel" id="cust-phone" required placeholder="সঠিক মোবাইল নম্বর (01XXXXXXXXX) *" autocomplete="tel" />
+          <span id="phone-error" class="input-error-msg">১১ ডিজিটের সঠিক মোবাইল নম্বর দিন (যেমন: 01712345678)</span>
+        </div>
+        <textarea id="cust-address" required rows="2" placeholder="সম্পূর্ণ ঠিকানা (বাসা নং, রোড, থানা, জেলা) *" autocomplete="street-address"></textarea>
         
-        <button type="submit" class="btn-checkout">
-          <span>অর্ডার কনফার্ম করুন (ক্যাশ অন ডেলিভারি)</span>
+        <button type="submit" id="submit-order-btn" class="btn-checkout">
+          <span id="btn-text">অর্ডার নিশ্চিত করুন (ক্যাশ অন ডেলিভারি)</span>
+          <span id="btn-loader" class="loader-spinner" style="display: none;"></span>
         </button>
       </form>
     </div>
   </aside>
 
-  <!-- টোস্ট নোটিফিকেশন (প্রোডাক্ট অ্যাড হলে ভেসে উঠবে) -->
+  <!-- Floating WhatsApp Support Button -->
+  <a href="https://wa.me/8801700000000?text=Hello%20FAJR%20Support,%20I%20have%20an%20inquiry." target="_blank" class="floating-whatsapp" aria-label="Customer Support">
+    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-2.18-.553-1.63-.675-2.67-2.332-2.752-2.44-.08-.11-1.025-1.364-1.025-2.602 0-1.236.643-1.845.874-2.095.195-.213.433-.265.578-.265.146 0 .292.002.418.01.135.008.316-.051.494.377.184.444.629 1.533.684 1.644.055.113.092.245.018.39-.073.146-.11.238-.219.367-.11.13-.23.29-.328.39-.11.11-.225.23-.097.45.128.22.569.939 1.22 1.52.839.75 1.547.982 1.767 1.092.22.11.35.093.48-.055.13-.149.554-.645.702-.867.148-.22.296-.184.498-.11.203.074 1.286.607 1.508.718.222.111.37.166.425.26.055.094.055.545-.089.95zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.957-1.399A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+    </svg>
+  </a>
+
   <div class="toast" id="toast-msg">Item added to your vault</div>
 
-  <!-- ফুটার -->
   <footer class="site-footer">
     <div class="footer-inner">
       <h2 class="footer-logo">FAJR</h2>
