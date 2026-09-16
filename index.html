@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAJR | Men's Essentials</title>
+  <!-- লোকাল কম্পাইল্ড সিএসএস (নো ওয়ার্নিং) -->
+  <link rel="stylesheet" href="dist/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-serif-luxury { font-family: 'Cinzel', serif; }
+  </style>
+</head>
+<body class="bg-[#0b0b0b] text-neutral-200 antialiased selection:bg-neutral-800">
+
+  <!-- নেভিগেশন বার -->
+  <header class="sticky top-0 z-40 border-b border-neutral-800/80 bg-[#0b0b0b]/90 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="text-2xl font-serif-luxury tracking-[0.25em] text-white">FAJR</a>
+      <nav class="hidden md:flex items-center space-x-8 text-xs tracking-widest uppercase text-neutral-400">
+        <a href="#products" class="hover:text-white transition">Collection</a>
+        <a href="#about" class="hover:text-white transition">Philosophy</a>
+        <a href="#order-now" class="hover:text-white transition">Order</a>
+      </nav>
+      <a href="#products" class="px-4 py-2 border border-neutral-700 text-xs tracking-widest uppercase text-white hover:bg-white hover:text-black transition">
+        Shop Now
+      </a>
+    </div>
+  </header>
+
+  <!-- হিরো সেকশন -->
+  <section class="relative py-28 px-6 text-center border-b border-neutral-900 bg-radial from-neutral-900/40 to-transparent">
+    <div class="max-w-3xl mx-auto space-y-6">
+      <p class="text-xs tracking-[0.3em] uppercase text-neutral-500">Premium Grooming & Essentials</p>
+      <h1 class="text-4xl md:text-6xl font-serif-luxury tracking-wide text-white leading-tight">
+        WHERE EVERY MAN <br />BEGINS AGAIN.
+      </h1>
+      <p class="text-neutral-400 text-sm md:text-base max-w-xl mx-auto font-light leading-relaxed">
+        যে দিন শুরু হয় ফজর দিয়ে, সেই দিন হারায় না। Crafted with uncompromised precision for the modern gentleman.
+      </p>
+      <div class="pt-4">
+        <a href="#products" class="inline-block bg-white text-black px-8 py-3 text-xs tracking-[0.2em] uppercase font-semibold hover:bg-neutral-200 transition">
+          Explore Collection
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- প্রোডাক্ট শোকেস -->
+  <section id="products" class="max-w-6xl mx-auto py-20 px-6">
+    <div class="text-center mb-14">
+      <p class="text-xs tracking-[0.3em] uppercase text-neutral-500 mb-2">Signature Lineup</p>
+      <h2 class="text-2xl md:text-3xl font-serif-luxury text-white">Curated Essentials</h2>
+    </div>
+
+    <!-- প্রোডাক্ট গ্রিড (জাভাস্ক্রিপ্ট দিয়ে রেন্ডার হবে) -->
+    <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- ডায়নামিক প্রোডাক্ট কার্ড লোড হবে -->
+    </div>
+  </section>
+
+  <!-- ওয়ান-পেজ অর্ডার / চেকআউট সেকশন -->
+  <section id="order-now" class="bg-neutral-950 border-t border-neutral-900 py-20 px-6">
+    <div class="max-w-xl mx-auto">
+      <div class="text-center mb-10">
+        <p class="text-xs tracking-[0.3em] uppercase text-neutral-500 mb-2">Express Checkout</p>
+        <h2 class="text-2xl font-serif-luxury text-white">ক্যাশ অন ডেলিভারি অর্ডার</h2>
+        <p class="text-xs text-neutral-400 mt-2">ফর্মটি পূরণ করুন, আমাদের প্রতিনিধি আপনাকে কল করে নিশ্চিত করবে।</p>
+      </div>
+
+      <form id="checkout-form" class="space-y-4 bg-neutral-900/50 p-6 md:p-8 border border-neutral-800 rounded-sm">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">আপনার নাম *</label>
+          <input type="text" id="cust-name" required placeholder="পুরো নাম লিখুন" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">মোবাইল নম্বর *</label>
+          <input type="tel" id="cust-phone" required placeholder="01XXXXXXXXX" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">ডেলিভারি ঠিকানা *</label>
+          <textarea id="cust-address" required rows="2" placeholder="বাসা নম্বর, রোড, এলাকা ও জেলার নাম" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">প্রোডাক্ট নির্বাচন করুন *</label>
+          <select id="selected-product" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500">
+            <!-- জাভাস্ক্রিপ্ট দিয়ে অপশন আসবে -->
+          </select>
+        </div>
+
+        <div class="pt-4">
+          <button type="submit" class="w-full bg-white text-black py-3.5 text-xs tracking-[0.2em] uppercase font-bold hover:bg-neutral-300 transition">
+            অর্ডার নিশ্চিত করুন (COD)
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ফুটার -->
+  <footer class="border-t border-neutral-900 py-10 px-6 text-center text-xs tracking-wider text-neutral-600">
+    <p class="font-serif-luxury text-sm text-neutral-400 mb-2">FAJR — MEN'S ESSENTIALS</p>
+    <p>&copy; 2026 FAJR. All rights reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
