@@ -1,12 +1,8 @@
-/* ==========================================
-   FAJR LUXURY DARK THEME - CORE STYLES
-   ========================================== */
 :root {
   --bg-black: #080808;
   --bg-card: #111111;
-  --bg-card-hover: #151515;
   --border-subtle: #222222;
-  --border-gold: #c5a880;
+  --border-active: #555555;
   --gold-accent: #d4af37;
   --gold-light: #f3e5ab;
   --text-white: #ffffff;
@@ -14,6 +10,7 @@
   --text-dim: #555555;
   --font-serif: 'Cinzel', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --danger: #ef4444;
 }
 
 *, *::before, *::after {
@@ -54,7 +51,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: rgba(8, 8, 8, 0.92);
+  background-color: rgba(8, 8, 8, 0.94);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-subtle);
@@ -136,13 +133,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
 
-/* Hero Section */
+/* Hero */
 .hero-section {
-  position: relative;
-  padding: 130px 20px 100px;
+  padding: 120px 20px 90px;
   text-align: center;
   background: radial-gradient(circle at 50% 20%, #1a1714 0%, var(--bg-black) 70%);
   border-bottom: 1px solid var(--border-subtle);
@@ -162,7 +157,6 @@ body {
   font-size: clamp(32px, 6vw, 56px);
   letter-spacing: 0.08em;
   line-height: 1.2;
-  color: #fff;
   margin-bottom: 20px;
 }
 
@@ -189,13 +183,10 @@ body {
   letter-spacing: 0.2em;
   font-weight: 700;
   text-decoration: none;
-  border-radius: 1px;
   transition: all 0.25s;
 }
 
-.btn-primary:hover {
-  background: var(--gold-light);
-}
+.btn-primary:hover { background: var(--gold-light); }
 
 .btn-secondary {
   background: transparent;
@@ -206,19 +197,16 @@ body {
   font-size: 11px;
   letter-spacing: 0.2em;
   cursor: pointer;
-  border-radius: 1px;
   transition: all 0.25s;
 }
 
-.btn-secondary:hover {
-  border-color: #fff;
-}
+.btn-secondary:hover { border-color: #fff; }
 
 /* Trust Bar */
 .trust-bar {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 36px 20px;
+  padding: 34px 20px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 24px;
@@ -239,7 +227,6 @@ body {
 .trust-item h4 {
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.04em;
 }
 
 .trust-item p {
@@ -247,7 +234,7 @@ body {
   color: var(--text-muted);
 }
 
-/* Collection Section */
+/* Collection & Grid */
 .collection-section {
   max-width: 1240px;
   margin: 0 auto;
@@ -256,7 +243,7 @@ body {
 
 .section-heading {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
 .badge-gold {
@@ -275,7 +262,7 @@ body {
 .section-heading p {
   color: var(--text-muted);
   font-size: 14px;
-  max-width: 500px;
+  max-width: 520px;
   margin: 0 auto;
 }
 
@@ -304,7 +291,6 @@ body {
   border-color: #fff;
 }
 
-/* Product Cards Grid */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -322,7 +308,7 @@ body {
 }
 
 .product-card:hover {
-  border-color: #383838;
+  border-color: var(--border-active);
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(0,0,0,0.6);
 }
@@ -342,9 +328,7 @@ body {
   filter: contrast(110%);
 }
 
-.product-card:hover .product-img {
-  transform: scale(1.05);
-}
+.product-card:hover .product-img { transform: scale(1.05); }
 
 .card-tag {
   position: absolute;
@@ -379,7 +363,6 @@ body {
 .product-name {
   font-family: var(--font-serif);
   font-size: 18px;
-  color: #fff;
   letter-spacing: 0.03em;
   margin-bottom: 6px;
 }
@@ -394,8 +377,50 @@ body {
   font-size: 12.5px;
   color: var(--text-muted);
   line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+/* Variant Pill Selectors */
+.variant-block {
   margin-bottom: 18px;
-  flex-grow: 1;
+}
+
+.variant-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.variant-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.variant-pill {
+  background: #161616;
+  border: 1px solid var(--border-subtle);
+  color: #aaa;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.variant-pill:hover {
+  color: #fff;
+  border-color: #555;
+}
+
+.variant-pill.selected {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
 }
 
 .product-footer {
@@ -404,12 +429,12 @@ body {
   justify-content: space-between;
   padding-top: 16px;
   border-top: 1px solid #1c1c1c;
+  margin-top: auto;
 }
 
 .product-price {
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
 }
 
 .btn-add-cart {
@@ -427,12 +452,9 @@ body {
 
 .btn-add-cart:hover {
   background: var(--gold-accent);
-  color: #000;
 }
 
-/* ==========================================
-   SLIDE-OVER CART DRAWER & CHECKOUT
-   ========================================== */
+/* Cart Drawer */
 .cart-overlay {
   position: fixed;
   inset: 0;
@@ -466,9 +488,7 @@ body {
   box-shadow: -10px 0 40px rgba(0,0,0,0.8);
 }
 
-.cart-drawer.open {
-  transform: translateX(0);
-}
+.cart-drawer.open { transform: translateX(0); }
 
 .cart-header {
   padding: 22px 24px;
@@ -518,12 +538,6 @@ body {
   color: var(--text-muted);
 }
 
-.empty-cart-view p {
-  font-size: 13px;
-  margin-top: 10px;
-}
-
-/* Cart Item Row */
 .cart-item {
   display: flex;
   gap: 14px;
@@ -537,17 +551,21 @@ body {
   height: 75px;
   object-fit: cover;
   border-radius: 2px;
-  background: #181818;
 }
 
-.cart-item-info {
-  flex-grow: 1;
-}
+.cart-item-info { flex-grow: 1; }
 
 .cart-item-title {
   font-size: 13.5px;
   font-weight: 600;
   margin-bottom: 2px;
+}
+
+.cart-item-variant {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
 }
 
 .cart-item-price {
@@ -576,7 +594,6 @@ body {
   width: 26px;
   height: 26px;
   cursor: pointer;
-  font-size: 14px;
 }
 
 .qty-control span {
@@ -593,11 +610,8 @@ body {
   text-decoration: underline;
 }
 
-.btn-remove-item:hover {
-  color: #ff5555;
-}
+.btn-remove-item:hover { color: var(--danger); }
 
-/* Cart Summary & Express Checkout */
 .cart-footer {
   border-top: 1px solid var(--border-subtle);
   background: #090909;
@@ -605,7 +619,7 @@ body {
 }
 
 .cart-calculations {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   border-bottom: 1px solid #1a1a1a;
   padding-bottom: 14px;
 }
@@ -613,7 +627,6 @@ body {
 .calc-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   font-size: 13px;
   color: var(--text-muted);
   margin-bottom: 6px;
@@ -632,12 +645,10 @@ body {
   color: #fff;
   font-size: 11px;
   padding: 4px 6px;
-  border-radius: 2px;
   outline: none;
-  cursor: pointer;
 }
 
-/* Form */
+/* Express Form */
 .express-form {
   display: flex;
   flex-direction: column;
@@ -650,7 +661,6 @@ body {
   text-transform: uppercase;
   color: var(--gold-accent);
   font-weight: 600;
-  margin-bottom: 2px;
 }
 
 .express-form input, .express-form textarea {
@@ -662,10 +672,22 @@ body {
   border-radius: 2px;
   font-family: inherit;
   outline: none;
+  width: 100%;
 }
 
 .express-form input:focus, .express-form textarea:focus {
   border-color: var(--gold-accent);
+}
+
+.express-form input.invalid {
+  border-color: var(--danger);
+}
+
+.input-error-msg {
+  display: none;
+  color: var(--danger);
+  font-size: 11px;
+  margin-top: 4px;
 }
 
 .btn-checkout {
@@ -678,14 +700,50 @@ body {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 2px;
   transition: all 0.25s;
-  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-checkout:hover {
   background: var(--gold-accent);
-  color: #000;
+}
+
+.loader-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #000;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Floating WhatsApp Button */
+.floating-whatsapp {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #25d366;
+  color: #fff;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  z-index: 90;
+  transition: transform 0.25s ease;
+}
+
+.floating-whatsapp:hover {
+  transform: scale(1.1);
 }
 
 /* Toast */
@@ -740,7 +798,6 @@ body {
   padding-top: 20px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .desktop-nav { display: none; }
   .filter-chips { display: flex; overflow-x: auto; padding-bottom: 6px; }
