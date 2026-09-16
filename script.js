@@ -9,7 +9,7 @@
 // CONFIGURATION: Replace these with your actual details
 const BUSINESS_WHATSAPP_NUMBER = "8801700000000"; 
 // Paste your deployed Google Apps Script Web App URL here:
-const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx_YOUR_SCRIPT_ID/exec";
+const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyBppIRoxGXijTj0SnHFxC8ue2WXYSikruIILqsTrPmvdYwwg9dd4oAKacT5cq9uycwUg/exec";
 
 // 1. PRODUCT CATALOG WITH VARIANTS
 const products = [
