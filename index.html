@@ -3,110 +3,172 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAJR | Men's Essentials</title>
-  <!-- লোকাল কম্পাইল্ড সিএসএস (নো ওয়ার্নিং) -->
-  <link rel="stylesheet" href="style.css" />
+  <title>FAJR | Luxury Men's Essentials</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-serif-luxury { font-family: 'Cinzel', serif; }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-[#0b0b0b] text-neutral-200 antialiased selection:bg-neutral-800">
+<body>
+
+  <!-- টপ অ্যানাউন্সমেন্ট বার -->
+  <div class="top-announcement">
+    <span>CRAFTED FOR THE MODERN GENTLEMAN • দেশব্যাপী ক্যাশ অন ডেলিভারি</span>
+  </div>
 
   <!-- নেভিগেশন বার -->
-  <header class="sticky top-0 z-40 border-b border-neutral-800/80 bg-[#0b0b0b]/90 backdrop-blur-md">
-    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-      <a href="#" class="text-2xl font-serif-luxury tracking-[0.25em] text-white">FAJR</a>
-      <nav class="hidden md:flex items-center space-x-8 text-xs tracking-widest uppercase text-neutral-400">
-        <a href="#products" class="hover:text-white transition">Collection</a>
-        <a href="#about" class="hover:text-white transition">Philosophy</a>
-        <a href="#order-now" class="hover:text-white transition">Order</a>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand-logo">FAJR</a>
+      <nav class="desktop-nav">
+        <button class="nav-btn active" onclick="filterProducts('all')">All Essentials</button>
+        <button class="nav-btn" onclick="filterProducts('Fragrance')">Fragrance</button>
+        <button class="nav-btn" onclick="filterProducts('Apparel')">Apparel</button>
+        <button class="nav-btn" onclick="filterProducts('Timepieces')">Timepieces</button>
       </nav>
-      <a href="#products" class="px-4 py-2 border border-neutral-700 text-xs tracking-widest uppercase text-white hover:bg-white hover:text-black transition">
-        Shop Now
-      </a>
+      <div class="header-actions">
+        <!-- কার্ট বাটন উইথ কাউন্টার -->
+        <button class="cart-trigger-btn" onclick="toggleCart(true)">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z" />
+          </svg>
+          <span class="cart-badge" id="cart-badge-count">0</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- হিরো সেকশন -->
-  <section class="relative py-28 px-6 text-center border-b border-neutral-900 bg-radial from-neutral-900/40 to-transparent">
-    <div class="max-w-3xl mx-auto space-y-6">
-      <p class="text-xs tracking-[0.3em] uppercase text-neutral-500">Premium Grooming & Essentials</p>
-      <h1 class="text-4xl md:text-6xl font-serif-luxury tracking-wide text-white leading-tight">
-        WHERE EVERY MAN <br />BEGINS AGAIN.
-      </h1>
-      <p class="text-neutral-400 text-sm md:text-base max-w-xl mx-auto font-light leading-relaxed">
-        যে দিন শুরু হয় ফজর দিয়ে, সেই দিন হারায় না। Crafted with uncompromised precision for the modern gentleman.
-      </p>
-      <div class="pt-4">
-        <a href="#products" class="inline-block bg-white text-black px-8 py-3 text-xs tracking-[0.2em] uppercase font-semibold hover:bg-neutral-200 transition">
-          Explore Collection
-        </a>
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="luxury-subtitle">SIGNATURE COLLECTION</span>
+      <h1 class="hero-title">WHERE EVERY MAN<br>BEGINS AGAIN.</h1>
+      <p class="hero-tagline">“যে দিন শুরু হয় ফজর দিয়ে, সেই দিন হারায় না।”</p>
+      <div class="hero-action-row">
+        <a href="#collection" class="btn-primary">View Collection</a>
+        <button onclick="toggleCart(true)" class="btn-secondary">Open Cart (<span id="hero-cart-count">0</span>)</button>
       </div>
     </div>
   </section>
 
-  <!-- প্রোডাক্ট শোকেস -->
-  <section id="products" class="max-w-6xl mx-auto py-20 px-6">
-    <div class="text-center mb-14">
-      <p class="text-xs tracking-[0.3em] uppercase text-neutral-500 mb-2">Signature Lineup</p>
-      <h2 class="text-2xl md:text-3xl font-serif-luxury text-white">Curated Essentials</h2>
+  <!-- ভ্যালু প্রপোজিশন বা ট্রাস্ট বার -->
+  <section class="trust-bar">
+    <div class="trust-item">
+      <span class="trust-icon">✦</span>
+      <div>
+        <h4>100% Uncompromised Quality</h4>
+        <p>Premium grade ingredients & fabric</p>
+      </div>
     </div>
-
-    <!-- প্রোডাক্ট গ্রিড (জাভাস্ক্রিপ্ট দিয়ে রেন্ডার হবে) -->
-    <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- ডায়নামিক প্রোডাক্ট কার্ড লোড হবে -->
+    <div class="trust-item">
+      <span class="trust-icon">✦</span>
+      <div>
+        <h4>Cash On Delivery</h4>
+        <p>সারাদেশে ডেলিভারি ও দ্রুত রিটার্ন পলিসি</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">✦</span>
+      <div>
+        <h4>Signature Packaging</h4>
+        <p>Delivered in luxury matte black box</p>
+      </div>
     </div>
   </section>
 
-  <!-- ওয়ান-পেজ অর্ডার / চেকআউট সেকশন -->
-  <section id="order-now" class="bg-neutral-950 border-t border-neutral-900 py-20 px-6">
-    <div class="max-w-xl mx-auto">
-      <div class="text-center mb-10">
-        <p class="text-xs tracking-[0.3em] uppercase text-neutral-500 mb-2">Express Checkout</p>
-        <h2 class="text-2xl font-serif-luxury text-white">ক্যাশ অন ডেলিভারি অর্ডার</h2>
-        <p class="text-xs text-neutral-400 mt-2">ফর্মটি পূরণ করুন, আমাদের প্রতিনিধি আপনাকে কল করে নিশ্চিত করবে।</p>
+  <!-- প্রোডাক্ট কালেকশন গ্রিড -->
+  <section id="collection" class="collection-section">
+    <div class="section-heading">
+      <span class="badge-gold">CURATED ESSENTIALS</span>
+      <h2>Signature Creations</h2>
+      <p>প্রতিটি প্রডাক্ট তৈরি করা হয়েছে আপনার ব্যক্তিত্ব ও আত্মবিশ্বাসকে আলাদা মাত্রা দিতে।</p>
+    </div>
+
+    <!-- ক্যাটাগরি ফিল্টার চিপস (মোবাইলের জন্য) -->
+    <div class="filter-chips">
+      <button class="chip active" onclick="filterProducts('all')">All</button>
+      <button class="chip" onclick="filterProducts('Fragrance')">Fragrance</button>
+      <button class="chip" onclick="filterProducts('Apparel')">Apparel</button>
+      <button class="chip" onclick="filterProducts('Timepieces')">Timepieces</button>
+    </div>
+
+    <!-- ডায়নামিক প্রোডাক্ট কার্ড লিস্ট -->
+    <div id="product-grid" class="product-grid">
+      <!-- JavaScript will load cards here -->
+    </div>
+  </section>
+
+  <!-- স্লাইড-ওভার কার্ট ড্রয়ার (Cart Drawer) -->
+  <div class="cart-overlay" id="cart-overlay" onclick="toggleCart(false)"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <div class="cart-header-title">
+        <h3>YOUR VAULT</h3>
+        <span class="cart-total-badge" id="cart-items-total-qty">0 items</span>
+      </div>
+      <button class="cart-close-btn" onclick="toggleCart(false)">&times;</button>
+    </div>
+
+    <!-- কার্ট আইটেম লিস্ট -->
+    <div class="cart-body" id="cart-items-container">
+      <!-- Empty cart or populated items injected via JS -->
+    </div>
+
+    <!-- কার্ট ফুটার ও এক্সপ্রেস চেকআউট ফর্ম -->
+    <div class="cart-footer" id="cart-footer">
+      <!-- সামারি সেকশন -->
+      <div class="cart-calculations">
+        <div class="calc-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal">৳0</span>
+        </div>
+        <div class="calc-row">
+          <div class="shipping-toggle">
+            <span>Delivery:</span>
+            <select id="shipping-zone" onchange="updateCartSummary()">
+              <option value="70">Inside Dhaka (৳70)</option>
+              <option value="130">Outside Dhaka (৳130)</option>
+            </select>
+          </div>
+          <span id="cart-shipping">৳70</span>
+        </div>
+        <div class="calc-row grand-total">
+          <span>Grand Total</span>
+          <span id="cart-grand-total">৳0</span>
+        </div>
       </div>
 
-      <form id="checkout-form" class="space-y-4 bg-neutral-900/50 p-6 md:p-8 border border-neutral-800 rounded-sm">
-        <div>
-          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">আপনার নাম *</label>
-          <input type="text" id="cust-name" required placeholder="পুরো নাম লিখুন" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500" />
-        </div>
-
-        <div>
-          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">মোবাইল নম্বর *</label>
-          <input type="tel" id="cust-phone" required placeholder="01XXXXXXXXX" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500" />
-        </div>
-
-        <div>
-          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">ডেলিভারি ঠিকানা *</label>
-          <textarea id="cust-address" required rows="2" placeholder="বাসা নম্বর, রোড, এলাকা ও জেলার নাম" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500"></textarea>
-        </div>
-
-        <div>
-          <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-2">প্রোডাক্ট নির্বাচন করুন *</label>
-          <select id="selected-product" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-3 text-sm text-white focus:outline-none focus:border-neutral-500">
-            <!-- জাভাস্ক্রিপ্ট দিয়ে অপশন আসবে -->
-          </select>
-        </div>
-
-        <div class="pt-4">
-          <button type="submit" class="w-full bg-white text-black py-3.5 text-xs tracking-[0.2em] uppercase font-bold hover:bg-neutral-300 transition">
-            অর্ডার নিশ্চিত করুন (COD)
-          </button>
-        </div>
+      <!-- এক্সপ্রেস চেকআউট ফর্ম -->
+      <form id="express-checkout-form" onsubmit="submitOrder(event)" class="express-form">
+        <span class="checkout-title">Express Cash On Delivery</span>
+        <input type="text" id="cust-name" required placeholder="আপনার পুরো নাম *" />
+        <input type="tel" id="cust-phone" required placeholder="মোবাইল নম্বর (01XXXXXXXXX) *" />
+        <textarea id="cust-address" required rows="2" placeholder="সম্পূর্ণ ডেলিভারি ঠিকানা (রোড, এলাকা, জেলা) *"></textarea>
+        
+        <button type="submit" class="btn-checkout">
+          <span>অর্ডার কনফার্ম করুন (ক্যাশ অন ডেলিভারি)</span>
+        </button>
       </form>
     </div>
-  </section>
+  </aside>
+
+  <!-- টোস্ট নোটিফিকেশন (প্রোডাক্ট অ্যাড হলে ভেসে উঠবে) -->
+  <div class="toast" id="toast-msg">Item added to your vault</div>
 
   <!-- ফুটার -->
-  <footer class="border-t border-neutral-900 py-10 px-6 text-center text-xs tracking-wider text-neutral-600">
-    <p class="font-serif-luxury text-sm text-neutral-400 mb-2">FAJR — MEN'S ESSENTIALS</p>
-    <p>&copy; 2026 FAJR. All rights reserved.</p>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <h2 class="footer-logo">FAJR</h2>
+      <p class="footer-motto">Crafted with uncompromised precision for the modern gentleman.</p>
+      <div class="footer-bottom">
+        <p>&copy; 2026 FAJR Essentials. All rights reserved.</p>
+      </div>
+    </div>
   </footer>
 
   <script src="script.js"></script>
