@@ -1,8 +1,17 @@
-/* ==========================================
-   FAJR E-COMMERCE LOGIC WITH CART & COD
-   ========================================== */
+/* =======================================================
+   FAJR PRODUCTION ENGINE
+   - Variants & Composite Keys
+   - LocalStorage Sync
+   - Strict BD Phone Regex
+   - Background Google Sheets Webhook + WhatsApp Fail-Safe
+   ======================================================= */
 
-// ১. প্রোডাক্ট ক্যাটালগ (প্রোডাক্ট অ্যাড/এডিট করার জায়গা)
+// CONFIGURATION: Replace these with your actual details
+const BUSINESS_WHATSAPP_NUMBER = "8801700000000"; 
+// Paste your deployed Google Apps Script Web App URL here:
+const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx_YOUR_SCRIPT_ID/exec";
+
+// 1. PRODUCT CATALOG WITH VARIANTS
 const products = [
   {
     id: 1,
@@ -10,9 +19,13 @@ const products = [
     category: "Fragrance",
     tag: "Signature Blend",
     rating: "★★★★★ (4.9)",
-    price: 1850,
+    variants: [
+      { name: "50ml", price: 1850 },
+      { name: "100ml", price: 2950 }
+    ],
+    defaultVariant: "50ml",
     image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=700&q=80",
-    desc: "Top notes of smoked cedarwood, bergamot, with an intense amber dry-down. Long-lasting executive projection."
+    desc: "Smoked cedarwood, bergamot, and intense amber dry-down. Executive projection."
   },
   {
     id: 2,
@@ -20,9 +33,15 @@ const products = [
     category: "Apparel",
     tag: "240 GSM Supima",
     rating: "★★★★★ (5.0)",
-    price: 850,
+    variants: [
+      { name: "M", price: 850 },
+      { name: "L", price: 850 },
+      { name: "XL", price: 850 },
+      { name: "XXL", price: 900 }
+    ],
+    defaultVariant: "L",
     image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80",
-    desc: "Dense luxury combed cotton, dropped shoulders with subtle tonal 'FAJR' embroidery on the chest."
+    desc: "240 GSM dense combed cotton, dropped shoulders, tonal embroidered chest crest."
   },
   {
     id: 3,
@@ -30,101 +49,172 @@ const products = [
     category: "Timepieces",
     tag: "Sapphire Glass",
     rating: "★★★★★ (4.8)",
-    price: 3200,
+    variants: [
+      { name: "Standard Dial", price: 3200 }
+    ],
+    defaultVariant: "Standard Dial",
     image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=700&q=80",
-    desc: "Surgical grade 316L stainless steel, matte-finished dial, paired with full-grain cowhide leather."
+    desc: "Surgical 316L black steel casing with genuine full-grain leather strap."
   }
 ];
 
-// আপনার ব্যবসার WhatsApp নম্বর (Country code সহ)
-const BUSINESS_WHATSAPP_NUMBER = "8801700000000";
+// In-memory selection state for cards before adding to cart: { productId: variantName }
+const selectedVariantState = {};
+products.forEach(p => { selectedVariantState[p.id] = p.defaultVariant; });
 
-// কার্ট স্টেট
-let cart = [];
+// 2. LOCALSTORAGE CART PERSISTENCE
+function loadCart() {
+  try {
+    const saved = localStorage.getItem("fajr_cart");
+    return saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    return [];
+  }
+}
 
-// ২. প্রোডাক্ট রেন্ডারিং
+function persistCart() {
+  localStorage.setItem("fajr_cart", JSON.stringify(cart));
+}
+
+let cart = loadCart();
+
+// 3. PRODUCT RENDERING & VARIANT TOGGLES
 function renderProducts(categoryFilter = "all") {
   const grid = document.getElementById("product-grid");
   const filtered = categoryFilter === "all" 
     ? products 
     : products.filter(p => p.category === categoryFilter);
 
-  grid.innerHTML = filtered.map(item => `
-    <div class="product-card">
-      <div class="product-image-wrap">
-        <img src="${item.image}" alt="${item.name}" class="product-img" />
-        <span class="card-tag">${item.tag}</span>
-      </div>
-      <div class="product-details">
-        <span class="product-category">${item.category}</span>
-        <h3 class="product-name">${item.name}</h3>
-        <span class="product-rating">${item.rating}</span>
-        <p class="product-desc">${item.desc}</p>
-        <div class="product-footer">
-          <span class="product-price">৳ ${item.price.toLocaleString()}</span>
-          <button onclick="addToCart(${item.id})" class="btn-add-cart">
-            Add To Cart
-          </button>
+  grid.innerHTML = filtered.map(item => {
+    const activeVarName = selectedVariantState[item.id] || item.defaultVariant;
+    const activeVarObj = item.variants.find(v => v.name === activeVarName) || item.variants[0];
+
+    const variantPillsHTML = item.variants.map(v => `
+      <button 
+        type="button"
+        class="variant-pill ${v.name === activeVarName ? 'selected' : ''}" 
+        onclick="handleSelectVariant(${item.id}, '${v.name}')">
+        ${v.name}
+      </button>
+    `).join("");
+
+    return `
+      <div class="product-card">
+        <div class="product-image-wrap">
+          <img src="${item.image}" alt="${item.name}" class="product-img" />
+          <span class="card-tag">${item.tag}</span>
+        </div>
+        <div class="product-details">
+          <span class="product-category">${item.category}</span>
+          <h3 class="product-name">${item.name}</h3>
+          <span class="product-rating">${item.rating}</span>
+          <p class="product-desc">${item.desc}</p>
+          
+          <div class="variant-block">
+            <span class="variant-label">Selection</span>
+            <div class="variant-options">${variantPillsHTML}</div>
+          </div>
+
+          <div class="product-footer">
+            <span class="product-price" id="price-tag-${item.id}">৳ ${activeVarObj.price.toLocaleString()}</span>
+            <button onclick="addToCart(${item.id})" class="btn-add-cart">
+              Add To Cart
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
-// ক্যাটাগরি ফিল্টার হ্যান্ডলার
+function handleSelectVariant(productId, variantName) {
+  selectedVariantState[productId] = variantName;
+  const product = products.find(p => p.id === productId);
+  const variantObj = product.variants.find(v => v.name === variantName);
+
+  // Update specific price tag and pill UI without full re-render
+  const priceTag = document.getElementById(`price-tag-${productId}`);
+  if (priceTag && variantObj) {
+    priceTag.innerText = `৳ ${variantObj.price.toLocaleString()}`;
+  }
+  renderProducts(getCurrentActiveCategory());
+}
+
+function getCurrentActiveCategory() {
+  const activeBtn = document.querySelector(".nav-btn.active");
+  if (!activeBtn) return "all";
+  const txt = activeBtn.innerText.toLowerCase();
+  if (txt.includes("fragrance")) return "Fragrance";
+  if (txt.includes("apparel")) return "Apparel";
+  if (txt.includes("timepieces")) return "Timepieces";
+  return "all";
+}
+
 function filterProducts(category) {
-  // ডেস্কটপ ট্যাব একটিভ ক্লাস
   document.querySelectorAll(".nav-btn").forEach(btn => {
     btn.classList.toggle("active", btn.textContent.toLowerCase().includes(category.toLowerCase()));
   });
-  // মোবাইল চিপ একটিভ ক্লাস
   document.querySelectorAll(".chip").forEach(chip => {
     chip.classList.toggle("active", chip.textContent.toLowerCase().includes(category.toLowerCase()));
   });
-
   renderProducts(category);
 }
 
-// ৩. কার্ট লজিক
+// 4. CART OPERATIONS WITH COMPOSITE KEYS
 function addToCart(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
 
-  const existing = cart.find(item => item.id === productId);
+  const variantName = selectedVariantState[productId] || product.defaultVariant;
+  const variantObj = product.variants.find(v => v.name === variantName) || product.variants[0];
+
+  // Composite unique key: Product ID + Variant Name
+  const compositeKey = `${product.id}-${variantName}`;
+
+  const existing = cart.find(item => item.cartItemId === compositeKey);
   if (existing) {
     existing.qty += 1;
   } else {
-    cart.push({ ...product, qty: 1 });
+    cart.push({
+      cartItemId: compositeKey,
+      id: product.id,
+      name: product.name,
+      variant: variantName,
+      price: variantObj.price,
+      image: product.image,
+      qty: 1
+    });
   }
 
+  persistCart();
   updateCartUI();
-  showToast(`${product.name} added to cart!`);
-  toggleCart(true); // সরাসরি ড্রয়ার ওপেন হবে
+  showToast(`${product.name} (${variantName}) added!`);
+  toggleCart(true);
 }
 
-function updateQty(productId, change) {
-  const item = cart.find(i => i.id === productId);
+function updateQty(cartItemId, change) {
+  const item = cart.find(i => i.cartItemId === cartItemId);
   if (!item) return;
 
   item.qty += change;
   if (item.qty <= 0) {
-    removeFromCart(productId);
+    removeFromCart(cartItemId);
     return;
   }
+  persistCart();
   updateCartUI();
 }
 
-function removeFromCart(productId) {
-  cart = cart.filter(item => item.id !== productId);
+function removeFromCart(cartItemId) {
+  cart = cart.filter(item => item.cartItemId !== cartItemId);
+  persistCart();
   updateCartUI();
 }
 
-// ৪. কার্ট UI আপডেট
 function updateCartUI() {
   const container = document.getElementById("cart-items-container");
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
 
-  // ব্যাজ আপডেট
   document.getElementById("cart-badge-count").innerText = totalQty;
   document.getElementById("hero-cart-count").innerText = totalQty;
   document.getElementById("cart-items-total-qty").innerText = `${totalQty} items`;
@@ -132,10 +222,10 @@ function updateCartUI() {
   if (cart.length === 0) {
     container.innerHTML = `
       <div class="empty-cart-view">
-        <svg width="48" height="48" fill="none" stroke="#444" viewBox="0 0 24 24" style="margin:0 auto">
+        <svg width="40" height="40" fill="none" stroke="#444" viewBox="0 0 24 24" style="margin:0 auto">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
         </svg>
-        <p>Your cart is empty.</p>
+        <p>Your vault is currently empty.</p>
       </div>
     `;
     document.getElementById("cart-footer").style.display = "none";
@@ -149,14 +239,15 @@ function updateCartUI() {
       <img src="${item.image}" alt="${item.name}" class="cart-item-img" />
       <div class="cart-item-info">
         <h4 class="cart-item-title">${item.name}</h4>
+        <div class="cart-item-variant">Variant: ${item.variant}</div>
         <div class="cart-item-price">৳ ${(item.price * item.qty).toLocaleString()}</div>
         <div class="cart-item-qty-row">
           <div class="qty-control">
-            <button onclick="updateQty(${item.id}, -1)">−</button>
+            <button onclick="updateQty('${item.cartItemId}', -1)">−</button>
             <span>${item.qty}</span>
-            <button onclick="updateQty(${item.id}, 1)">+</button>
+            <button onclick="updateQty('${item.cartItemId}', 1)">+</button>
           </div>
-          <button onclick="removeFromCart(${item.id})" class="btn-remove-item">Remove</button>
+          <button onclick="removeFromCart('${item.cartItemId}')" class="btn-remove-item">Remove</button>
         </div>
       </div>
     </div>
@@ -165,7 +256,6 @@ function updateCartUI() {
   updateCartSummary();
 }
 
-// হিসাব আপডেট (সাবটোটাল ও গ্র্যান্ড টোটাল)
 function updateCartSummary() {
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const shippingFee = parseInt(document.getElementById("shipping-zone").value) || 70;
@@ -176,7 +266,6 @@ function updateCartSummary() {
   document.getElementById("cart-grand-total").innerText = `৳ ${grandTotal.toLocaleString()}`;
 }
 
-// ৫. ড্রয়ার টগল (Open / Close)
 function toggleCart(isOpen) {
   const drawer = document.getElementById("cart-drawer");
   const overlay = document.getElementById("cart-overlay");
@@ -184,7 +273,7 @@ function toggleCart(isOpen) {
   if (isOpen) {
     drawer.classList.add("open");
     overlay.classList.add("open");
-    document.body.style.overflow = "hidden"; // স্ক্রলিং বন্ধ রাখবে
+    document.body.style.overflow = "hidden";
   } else {
     drawer.classList.remove("open");
     overlay.classList.remove("open");
@@ -192,18 +281,29 @@ function toggleCart(isOpen) {
   }
 }
 
-// টোস্ট নোটিফিকেশন
 function showToast(message) {
   const toast = document.getElementById("toast-msg");
   toast.innerText = message;
   toast.classList.add("show");
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2400);
+  setTimeout(() => { toast.classList.remove("show"); }, 2400);
 }
 
-// ৬. এক্সপ্রেস ক্যাশ অন ডেলিভারি অর্ডার সাবমিশন
-function submitOrder(event) {
+// 5. BANGLADESHI PHONE NUMBER VALIDATION & FORMATTER
+function validateAndFormatBDPhone(inputStr) {
+  // Strip spaces, hyphens, and brackets
+  let clean = inputStr.replace(/[\s\-\(\)]/g, "");
+  
+  // Standardize +880 / 880 prefix
+  if (clean.startsWith("+880")) clean = "0" + clean.slice(4);
+  else if (clean.startsWith("880")) clean = "0" + clean.slice(3);
+
+  // Strict regex: must be 11 digits starting with 013-019
+  const bdPhoneRegex = /^01[3-9]\d{8}$/;
+  return bdPhoneRegex.test(clean) ? clean : null;
+}
+
+// 6. ORDER SUBMISSION WITH WEBHOOK & WHATSAPP REDUNDANCY
+async function submitOrder(event) {
   event.preventDefault();
 
   if (cart.length === 0) {
@@ -212,40 +312,96 @@ function submitOrder(event) {
   }
 
   const name = document.getElementById("cust-name").value.trim();
-  const phone = document.getElementById("cust-phone").value.trim();
+  const rawPhone = document.getElementById("cust-phone").value.trim();
   const address = document.getElementById("cust-address").value.trim();
-  const shippingFee = parseInt(document.getElementById("shipping-zone").value);
+  const shippingFee = parseInt(document.getElementById("shipping-zone").value) || 70;
+  const phoneError = document.getElementById("phone-error");
+  const phoneInput = document.getElementById("cust-phone");
+
+  // Validate Phone
+  const validPhone = validateAndFormatBDPhone(rawPhone);
+  if (!validPhone) {
+    phoneInput.classList.add("invalid");
+    phoneError.style.display = "block";
+    phoneInput.focus();
+    return;
+  }
+  phoneInput.classList.remove("invalid");
+  phoneError.style.display = "none";
+
+  // Calculations
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const grandTotal = subtotal + shippingFee;
+  const itemsSummary = cart.map(i => `${i.name} [${i.variant}] x${i.qty}`).join(", ");
 
-  // কার্টের আইটেম টেক্সট
-  const itemsText = cart.map(i => `• ${i.name} (Qty: ${i.qty}) - ৳${i.price * i.qty}`).join("%0A");
+  // Loading state
+  const btnText = document.getElementById("btn-text");
+  const btnLoader = document.getElementById("btn-loader");
+  const submitBtn = document.getElementById("submit-order-btn");
+  
+  submitBtn.disabled = true;
+  btnText.innerText = "প্রসেসিং হচ্ছে...";
+  btnLoader.style.display = "inline-block";
 
-  // WhatsApp মেসেজ ফরম্যাট
+  // Payload for Google Sheet Logger
+  const orderPayload = {
+    timestamp: new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" }),
+    customerName: name,
+    phone: validPhone,
+    address: address,
+    items: itemsSummary,
+    subtotal: subtotal,
+    deliveryCharge: shippingFee,
+    grandTotal: grandTotal,
+    status: "Pending Confirmation"
+  };
+
+  // 1. Silent Background Submission to Google Sheets
+  try {
+    if (GOOGLE_SHEET_WEBHOOK_URL && !GOOGLE_SHEET_WEBHOOK_URL.includes("YOUR_SCRIPT_ID")) {
+      await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderPayload)
+      });
+    }
+  } catch (err) {
+    console.warn("Background sheet sync failed, continuing to WhatsApp fallback:", err);
+  }
+
+  // 2. Format WhatsApp Dispatch Message
+  const whatsappItemsText = cart.map(i => `• ${i.name} (${i.variant}) x${i.qty} - ৳${i.price * i.qty}`).join("%0A");
   const message = `*NEW ORDER - FAJR ESSENTIALS*%0A` +
                   `----------------------------------%0A` +
                   `*Customer:* ${encodeURIComponent(name)}%0A` +
-                  `*Phone:* ${encodeURIComponent(phone)}%0A` +
+                  `*Phone:* ${encodeURIComponent(validPhone)}%0A` +
                   `*Address:* ${encodeURIComponent(address)}%0A` +
                   `----------------------------------%0A` +
-                  `*Order Items:*%0A${itemsText}%0A` +
+                  `*Items Ordered:*%0A${whatsappItemsText}%0A` +
                   `----------------------------------%0A` +
                   `*Subtotal:* ৳${subtotal}%0A` +
                   `*Delivery:* ৳${shippingFee}%0A` +
                   `*Grand Total:* ৳${grandTotal}%0A` +
-                  `*Payment Mode:* Cash On Delivery`;
+                  `*Payment:* Cash On Delivery`;
 
-  // WhatsApp ওপেন
-  window.open(`https://wa.me/${BUSINESS_WHATSAPP_NUMBER}?text=${message}`, "_blank");
-
-  // কার্ট ক্লিয়ার
+  // Clear Cart
   cart = [];
+  persistCart();
   updateCartUI();
   toggleCart(false);
   event.target.reset();
+
+  // Reset button state
+  submitBtn.disabled = false;
+  btnText.innerText = "অর্ডার নিশ্চিত করুন (ক্যাশ অন ডেলিভারি)";
+  btnLoader.style.display = "none";
+
+  // Trigger WhatsApp dispatch
+  window.open(`https://wa.me/${BUSINESS_WHATSAPP_NUMBER}?text=${message}`, "_blank");
   alert("ধন্যবাদ! আপনার অর্ডারটি গ্রহণ করা হয়েছে। কনফার্মেশনের জন্য হোয়াটসঅ্যাপে নিয়ে যাওয়া হচ্ছে।");
 }
 
-// ইনিশিয়াল লোড
+// Initial Boot
 renderProducts();
 updateCartUI();
